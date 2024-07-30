@@ -1,3 +1,4 @@
+from pathlib import Path
 import numpy as np
 import pandas as pd
 from nikkos_tools import stat_functions as sf
@@ -297,3 +298,73 @@ def signal_to_noise_Ne3O2Ha_g395m(df, signal_to_noise):
               & signal_to_noise_3869_g395m(df, signal_to_noise) 
               & signal_to_noise_Ha_g395m(df, signal_to_noise)
               ]
+
+def make_sphinx_df(sphinx_data_path):
+    data = Path(sphinx_data_path).resolve()
+    df = (pd.read_csv(data.joinpath('all_basic_data.csv'))
+                .assign(
+                OIII_Hb = lambda x: x['O__3_5006.84A_int'] / x['H__1_4861.32A_int'],
+                O32 = lambda x: x['O__3_5006.84A_int'] / (x["O__2_3728.81A_int"] + x["O__2_3726.03A_int"]),
+                R23 = lambda x: (x['O__3_5006.84A_int'] + x["O__3_4958.91A_int"] + x["O__2_3728.81A_int"] + x["O__2_3726.03A_int"]) / x["H__1_4861.32A_int"],
+                NeIII_OII = lambda x: x["Ne_3_3868.76A_int"] / (x["O__2_3728.81A_int"] + x["O__2_3726.03A_int"]),
+                log_OIII_Hb = lambda x: np.log10(x['O__3_5006.84A_int'] / x['H__1_4861.32A_int']),
+                log_O32 = lambda x: np.log10(x['O__3_5006.84A_int'] / (x["O__2_3728.81A_int"] + x["O__2_3726.03A_int"])),
+                log_R23 = lambda x: np.log10((x['O__3_5006.84A_int'] + x["O__3_4958.91A_int"] + x["O__2_3728.81A_int"] + x["O__2_3726.03A_int"]) / x["H__1_4861.32A_int"]),
+                log_NeIII_OII = lambda x: np.log10(x["Ne_3_3868.76A_int"] / (x["O__2_3728.81A_int"] + x["O__2_3726.03A_int"])),
+                )
+    )
+    return df
+
+def make_sphinx_binned_df(sphinxdf):
+
+    z_sphinx = sphinxdf['redshift'].unique()
+    log_O32_sphinx = np.zeros(len(z_sphinx))
+    log_O32_sphinx_16 = np.zeros(len(z_sphinx))
+    log_O32_sphinx_84 = np.zeros(len(z_sphinx))
+
+    log_R23_sphinx = np.zeros(len(z_sphinx))
+    log_R23_sphinx_16 = np.zeros(len(z_sphinx))
+    log_R23_sphinx_84 = np.zeros(len(z_sphinx))
+
+    log_OIII_Hb_sphinx = np.zeros(len(z_sphinx))
+    log_OIII_Hb_sphinx_16 = np.zeros(len(z_sphinx))
+    log_OIII_Hb_sphinx_84 = np.zeros(len(z_sphinx))
+
+    log_NeIII_OII_sphinx = np.zeros(len(z_sphinx))
+    log_NeIII_OII_sphinx_16 = np.zeros(len(z_sphinx))
+    log_NeIII_OII_sphinx_84 = np.zeros(len(z_sphinx))
+
+    for i,z in enumerate(z_sphinx):
+        log_O32_sphinx[i] = sphinxdf[sphinxdf.redshift == z]['log_O32'].median()
+        log_O32_sphinx_16[i] = np.abs(sphinxdf[sphinxdf.redshift == z]['log_O32'].quantile(q=0.16) - log_O32_sphinx[i])
+        log_O32_sphinx_84[i] = np.abs(sphinxdf[sphinxdf.redshift == z]['log_O32'].quantile(q=0.84) - log_O32_sphinx[i])
+
+        log_R23_sphinx[i] = sphinxdf[sphinxdf.redshift == z]['log_R23'].median()
+        log_R23_sphinx_16[i] = np.abs(sphinxdf[sphinxdf.redshift == z]['log_R23'].quantile(q=0.16) - log_R23_sphinx[i])
+        log_R23_sphinx_84[i] = np.abs(sphinxdf[sphinxdf.redshift == z]['log_R23'].quantile(q=0.84) - log_R23_sphinx[i])
+
+        log_OIII_Hb_sphinx[i] = sphinxdf[sphinxdf.redshift == z]['log_OIII_Hb'].median()
+        log_OIII_Hb_sphinx_16[i] = np.abs(sphinxdf[sphinxdf.redshift == z]['log_OIII_Hb'].quantile(q=0.16) - log_OIII_Hb_sphinx[i])
+        log_OIII_Hb_sphinx_84[i] = np.abs(sphinxdf[sphinxdf.redshift == z]['log_OIII_Hb'].quantile(q=0.84) - log_OIII_Hb_sphinx[i])
+
+        log_NeIII_OII_sphinx[i] = sphinxdf[sphinxdf.redshift == z]['log_NeIII_OII'].median()
+        log_NeIII_OII_sphinx_16[i] = np.abs(sphinxdf[sphinxdf.redshift == z]['log_NeIII_OII'].quantile(q=0.16) - log_NeIII_OII_sphinx[i])
+        log_NeIII_OII_sphinx_84[i] = np.abs(sphinxdf[sphinxdf.redshift == z]['log_NeIII_OII'].quantile(q=0.84) - log_NeIII_OII_sphinx[i])
+
+    sphinx_binned_data = {
+        'redshift':z_sphinx,
+        'log_O32_sphinx':log_O32_sphinx,
+        'log_O32_sphinx_16':log_O32_sphinx_16,
+        'log_O32_sphinx_84':log_O32_sphinx_84,
+        'log_R23_sphinx':log_R23_sphinx,
+        'log_R23_sphinx_16':log_R23_sphinx_16,
+        'log_R23_sphinx_84':log_R23_sphinx_84,
+        'log_OIII_Hb_sphinx':log_OIII_Hb_sphinx,
+        'log_OIII_Hb_sphinx_16':log_OIII_Hb_sphinx_16,
+        'log_OIII_Hb_sphinx_84':log_OIII_Hb_sphinx_84,
+        'log_NeIII_OII_sphinx':log_NeIII_OII_sphinx,
+        'log_NeIII_OII_sphinx_16':log_NeIII_OII_sphinx_16,
+        'log_NeIII_OII_sphinx_84':log_NeIII_OII_sphinx_84
+    }
+
+    return pd.DataFrame(data=sphinx_binned_data)
