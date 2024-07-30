@@ -318,6 +318,9 @@ def make_sphinx_df(sphinx_data_path):
 def make_sphinx_binned_df(sphinxdf):
 
     z_sphinx = sphinxdf['redshift'].unique()
+    hden_OII = np.zeros(len(z_sphinx))
+    hden_CIII = np.zeros(len(z_sphinx))
+
     log_O32_sphinx = np.zeros(len(z_sphinx))
     log_O32_sphinx_16 = np.zeros(len(z_sphinx))
     log_O32_sphinx_84 = np.zeros(len(z_sphinx))
@@ -335,6 +338,9 @@ def make_sphinx_binned_df(sphinxdf):
     log_NeIII_OII_sphinx_84 = np.zeros(len(z_sphinx))
 
     for i,z in enumerate(z_sphinx):
+        hden_OII[i] = sphinxdf[sphinxdf.redshift == z]['gas_density_3727'].median()
+        hden_CIII[i] = sphinxdf[sphinxdf.redshift == z]['gas_density_1908'].median()
+
         log_O32_sphinx[i] = sphinxdf[sphinxdf.redshift == z]['log_O32'].median()
         log_O32_sphinx_16[i] = np.abs(sphinxdf[sphinxdf.redshift == z]['log_O32'].quantile(q=0.16) - log_O32_sphinx[i])
         log_O32_sphinx_84[i] = np.abs(sphinxdf[sphinxdf.redshift == z]['log_O32'].quantile(q=0.84) - log_O32_sphinx[i])
@@ -353,6 +359,8 @@ def make_sphinx_binned_df(sphinxdf):
 
     sphinx_binned_data = {
         'redshift':z_sphinx,
+        'hden_OII':hden_OII,
+        'hden_CIII':hden_CIII,
         'log_O32_sphinx':log_O32_sphinx,
         'log_O32_sphinx_16':log_O32_sphinx_16,
         'log_O32_sphinx_84':log_O32_sphinx_84,
