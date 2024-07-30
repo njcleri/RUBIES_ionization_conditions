@@ -299,6 +299,20 @@ def signal_to_noise_Ne3O2Ha_g395m(df, signal_to_noise):
               & signal_to_noise_Ha_g395m(df, signal_to_noise)
               ]
 
+def signal_to_noise_Ne3O32_prism(df, signal_to_noise):
+    return df[
+              signal_to_noise_3727_prism(df, signal_to_noise)  
+              & signal_to_noise_3869_prism(df, signal_to_noise) 
+              & signal_to_noise_5007_prism(df, signal_to_noise)
+              ]
+
+def signal_to_noise_Ne3O32_g395m(df, signal_to_noise):
+    return df[
+              signal_to_noise_3727_g395m(df, signal_to_noise)  
+              & signal_to_noise_3869_g395m(df, signal_to_noise) 
+              & signal_to_noise_5007_g395m(df, signal_to_noise)
+              ]
+
 def make_sphinx_df(sphinx_data_path):
     data = Path(sphinx_data_path).resolve()
     df = (pd.read_csv(data.joinpath('all_basic_data.csv'))
