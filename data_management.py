@@ -3,10 +3,10 @@ import pandas as pd
 from nikkos_tools import stat_functions as sf
 from nikkos_tools import physics_functions as pf
 
-def r23_uncertainty(oiii_5007, oiii_5007_ERR, oiii_4959, oiii_4959_ERR, oii, oii_ERR, hb, hb_err):
+def r23_uncertainty(oiii_5007, oiii_5007_ERR, oiii_4959, oiii_4959_ERR, oii, oii_ERR, Hb, Hb_err):
     numerator = oiii_5007 + oiii_4959 + oii
     numerator_ERR = sf.propagate_uncertainty_addition(sf.propagate_uncertainty_addition(oiii_5007_ERR, oiii_4959_ERR), oii_ERR)
-    return sf.propagate_uncertainty_division(numerator, numerator_ERR, hb, hb_err)
+    return sf.propagate_uncertainty_division(numerator, numerator_ERR, Hb, Hb_err)
 
 def make_df_prism(df):
     new_df = (df.loc[:, df.columns.str.contains('prism')|(df.columns == 'id')]
@@ -154,7 +154,7 @@ def signal_to_noise_3727_prism(df, signal_to_noise, mcmc_runaway_threshold=10000
                            )
     return signal_to_noise_cut
 
-def signal_to_noise_hb_g395m(df, signal_to_noise, mcmc_runaway_threshold=10000):
+def signal_to_noise_Hb_g395m(df, signal_to_noise, mcmc_runaway_threshold=10000):
     signal_to_noise_cut = (
                            (df.Hb_g395m/df.Hb_g395m_p16_err > signal_to_noise)
                            &(df.Hb_g395m/df.Hb_g395m_p84_err > signal_to_noise)
@@ -162,7 +162,7 @@ def signal_to_noise_hb_g395m(df, signal_to_noise, mcmc_runaway_threshold=10000):
                            )
     return signal_to_noise_cut
 
-def signal_to_noise_hb_prism(df, signal_to_noise, mcmc_runaway_threshold=10000):
+def signal_to_noise_Hb_prism(df, signal_to_noise, mcmc_runaway_threshold=10000):
     signal_to_noise_cut = (
                            (df.Hb_prism/df.Hb_prism_p16_err > signal_to_noise)
                            &(df.Hb_prism/df.Hb_prism_p84_err > signal_to_noise)
@@ -170,7 +170,7 @@ def signal_to_noise_hb_prism(df, signal_to_noise, mcmc_runaway_threshold=10000):
                            )
     return signal_to_noise_cut
 
-def signal_to_noise_ha_g395m(df, signal_to_noise, mcmc_runaway_threshold=10000):
+def signal_to_noise_Ha_g395m(df, signal_to_noise, mcmc_runaway_threshold=10000):
     signal_to_noise_cut = (
                            (df.Ha_g395m/df.Ha_g395m_p16_err > signal_to_noise)
                            &(df.Ha_g395m/df.Ha_g395m_p84_err > signal_to_noise)
@@ -178,7 +178,7 @@ def signal_to_noise_ha_g395m(df, signal_to_noise, mcmc_runaway_threshold=10000):
                            )
     return signal_to_noise_cut
 
-def signal_to_noise_ha_prism(df, signal_to_noise, mcmc_runaway_threshold=10000):
+def signal_to_noise_Ha_prism(df, signal_to_noise, mcmc_runaway_threshold=10000):
     signal_to_noise_cut = (
                            (df.Ha_prism/df.Ha_prism_p16_err > signal_to_noise)
                            &(df.Ha_prism/df.Ha_prism_p84_err > signal_to_noise)
@@ -202,20 +202,20 @@ def signal_to_noise_O32Ha_g395m(df, signal_to_noise):
     return df[
               signal_to_noise_3727_g395m(df, signal_to_noise) 
               & signal_to_noise_5007_g395m(df, signal_to_noise) 
-              & signal_to_noise_ha_g395m(df, signal_to_noise)
+              & signal_to_noise_Ha_g395m(df, signal_to_noise)
               ]
 
 def signal_to_noise_O32Ha_prism(df, signal_to_noise):
     return df[
               signal_to_noise_3727_prism(df, signal_to_noise) 
               & signal_to_noise_5007_prism(df, signal_to_noise) 
-              & signal_to_noise_ha_prism(df, signal_to_noise)
+              & signal_to_noise_Ha_prism(df, signal_to_noise)
               ]
 
 def signal_to_noise_R23_g395m(df, signal_to_noise):
     return df[
               signal_to_noise_3727_g395m(df, signal_to_noise) 
-              & signal_to_noise_hb_g395m(df, signal_to_noise) 
+              & signal_to_noise_Hb_g395m(df, signal_to_noise) 
               & signal_to_noise_4959_g395m(df, signal_to_noise) 
               & signal_to_noise_5007_g395m(df, signal_to_noise)
               ]
@@ -223,7 +223,7 @@ def signal_to_noise_R23_g395m(df, signal_to_noise):
 def signal_to_noise_R23_prism(df, signal_to_noise):
     return df[
               signal_to_noise_3727_prism(df, signal_to_noise) 
-              & signal_to_noise_hb_prism(df, signal_to_noise) 
+              & signal_to_noise_Hb_prism(df, signal_to_noise) 
               & signal_to_noise_4959_prism(df, signal_to_noise) 
               & signal_to_noise_5007_prism(df, signal_to_noise)
               ]
@@ -231,45 +231,45 @@ def signal_to_noise_R23_prism(df, signal_to_noise):
 def signal_to_noise_R23Ha_g395m(df, signal_to_noise):
     return df[
               signal_to_noise_3727_g395m(df, signal_to_noise) 
-              & signal_to_noise_hb_g395m(df, signal_to_noise) 
+              & signal_to_noise_Hb_g395m(df, signal_to_noise) 
               & signal_to_noise_4959_g395m(df, signal_to_noise) 
               & signal_to_noise_5007_g395m(df, signal_to_noise) 
-              & signal_to_noise_ha_g395m(df, signal_to_noise)
+              & signal_to_noise_Ha_g395m(df, signal_to_noise)
               ]
 
 def signal_to_noise_R23Ha_prism(df, signal_to_noise):
     return df[
               signal_to_noise_3727_prism(df, signal_to_noise) 
-              & signal_to_noise_hb_prism(df, signal_to_noise) 
+              & signal_to_noise_Hb_prism(df, signal_to_noise) 
               & signal_to_noise_4959_prism(df, signal_to_noise) 
               & signal_to_noise_5007_prism(df, signal_to_noise) 
-              & signal_to_noise_ha_prism(df, signal_to_noise)
+              & signal_to_noise_Ha_prism(df, signal_to_noise)
               ]
 
 def signal_to_noise_O3Hb_prism(df, signal_to_noise):
     return df[
-              signal_to_noise_hb_prism(df, signal_to_noise) 
+              signal_to_noise_Hb_prism(df, signal_to_noise) 
               & signal_to_noise_5007_prism(df, signal_to_noise) 
               ]
 
 def signal_to_noise_O3Hb_g395m(df, signal_to_noise):
     return df[
-              signal_to_noise_hb_g395m(df, signal_to_noise) 
+              signal_to_noise_Hb_g395m(df, signal_to_noise) 
               & signal_to_noise_5007_g395m(df, signal_to_noise) 
               ]
 
 def signal_to_noise_O3HbHa_prism(df, signal_to_noise):
     return df[
-              signal_to_noise_hb_prism(df, signal_to_noise) 
+              signal_to_noise_Hb_prism(df, signal_to_noise) 
               & signal_to_noise_5007_prism(df, signal_to_noise) 
-              & signal_to_noise_ha_prism(df, signal_to_noise)
+              & signal_to_noise_Ha_prism(df, signal_to_noise)
               ]
 
 def signal_to_noise_O3HbHa_g395m(df, signal_to_noise):
     return df[
-              signal_to_noise_hb_g395m(df, signal_to_noise) 
+              signal_to_noise_Hb_g395m(df, signal_to_noise) 
               & signal_to_noise_5007_g395m(df, signal_to_noise) 
-              & signal_to_noise_ha_g395m(df, signal_to_noise)
+              & signal_to_noise_Ha_g395m(df, signal_to_noise)
               ]
 
 def signal_to_noise_Ne3O2_prism(df, signal_to_noise):
@@ -288,12 +288,12 @@ def signal_to_noise_Ne3O2Ha_prism(df, signal_to_noise):
     return df[
               signal_to_noise_3727_prism(df, signal_to_noise)  
               & signal_to_noise_3869_prism(df, signal_to_noise) 
-              & signal_to_noise_ha_prism(df, signal_to_noise)
+              & signal_to_noise_Ha_prism(df, signal_to_noise)
               ]
 
 def signal_to_noise_Ne3O2Ha_g395m(df, signal_to_noise):
     return df[
               signal_to_noise_3727_g395m(df, signal_to_noise)  
               & signal_to_noise_3869_g395m(df, signal_to_noise) 
-              & signal_to_noise_ha_g395m(df, signal_to_noise)
+              & signal_to_noise_Ha_g395m(df, signal_to_noise)
               ]
