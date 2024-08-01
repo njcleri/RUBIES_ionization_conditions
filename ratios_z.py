@@ -252,4 +252,6 @@ def make_ratios_versus_redshift_plot():
 
     plt.savefig(globals.FIGURES.joinpath('ratios_z.pdf'))
 
-make_ratios_versus_redshift_plot()
+
+if __name__ == "__main__":
+   make_ratios_versus_redshift_plot()
