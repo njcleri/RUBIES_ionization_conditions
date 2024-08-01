@@ -7,6 +7,7 @@ from matplotlib.lines import Line2D
 from astropy.table import Table
 from nikkos_tools import stat_functions as sf
 import data_management
+import linmix_fits
 import globals
 
 line_fluxes = pd.read_csv(globals.RUBIES_DATA.joinpath('line_flux_df.csv'), index_col=0)
@@ -32,7 +33,65 @@ Ne3O2Hadf_both = pd.merge(Ne3O2Hadf_prism, Ne3O2Hadf_g395m, on='id', how='inner'
 sphinxdf = data_management.make_sphinx_df(globals.SPHINX_DATA)
 sphinx_binned = data_management.make_sphinx_binned_df(sphinxdf)
 
+# def fit_OIIIHb_versus_Ha_linmix():
+#     x = pd.concat([np.log10(O3HbHadf_prism.L_Ha), np.log10(O3HbHadf_g395m.L_Ha)])
+#     y = pd.concat([np.log10(O3HbHadf_prism.OIII_Hb), np.log10(O3HbHadf_g395m.OIII_Hb)])
+#     xsig = pd.concat([(sf.propagate_uncertainty_log10(O3HbHadf_prism.L_Ha,O3HbHadf_prism.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(O3HbHadf_prism.L_Ha,O3HbHadf_prism.L_Ha_ERR_84)) / 2,
+#                         (sf.propagate_uncertainty_log10(O3HbHadf_g395m.L_Ha,O3HbHadf_g395m.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(O3HbHadf_g395m.L_Ha,O3HbHadf_g395m.L_Ha_ERR_84)) / 2])
+#     ysig = pd.concat([(sf.propagate_uncertainty_log10(O3HbHadf_prism.OIII_Hb,O3HbHadf_prism.OIII_Hb_ERR_16) + sf.propagate_uncertainty_log10(O3HbHadf_prism.OIII_Hb,O3HbHadf_prism.OIII_Hb_ERR_84)) / 2,
+#                         (sf.propagate_uncertainty_log10(O3HbHadf_g395m.OIII_Hb,O3HbHadf_g395m.OIII_Hb_ERR_16) + sf.propagate_uncertainty_log10(O3HbHadf_g395m.OIII_Hb,O3HbHadf_g395m.OIII_Hb_ERR_84)) / 2])
+
+#     lm = linmix.LinMix(x, y, xsig, ysig, K=2)
+#     lm.run_mcmc(silent=True)
+
+#     return lm.chain
+
+# def fit_NeIIIOII_versus_Ha_linmix():
+#     x = pd.concat([np.log10(Ne3O2Hadf_prism.L_Ha), np.log10(Ne3O2Hadf_g395m.L_Ha)])
+#     y = pd.concat([np.log10(Ne3O2Hadf_prism.NeIII_OII), np.log10(Ne3O2Hadf_g395m.NeIII_OII)])
+#     xsig = pd.concat([(sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.L_Ha,Ne3O2Hadf_prism.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.L_Ha,Ne3O2Hadf_prism.L_Ha_ERR_84)) / 2,
+#                         (sf.propagate_uncertainty_log10(Ne3O2Hadf_g395m.L_Ha,Ne3O2Hadf_g395m.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(Ne3O2Hadf_g395m.L_Ha,Ne3O2Hadf_g395m.L_Ha_ERR_84)) / 2])
+#     ysig = pd.concat([(sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.NeIII_OII,Ne3O2Hadf_prism.NeIII_OII_ERR_16) + sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.NeIII_OII,Ne3O2Hadf_prism.NeIII_OII_ERR_84)) / 2,
+#                         (sf.propagate_uncertainty_log10(Ne3O2Hadf_g395m.NeIII_OII,Ne3O2Hadf_g395m.NeIII_OII_ERR_16) + sf.propagate_uncertainty_log10(Ne3O2Hadf_g395m.NeIII_OII,Ne3O2Hadf_g395m.NeIII_OII_ERR_84)) / 2])
+
+#     lm = linmix.LinMix(x, y, xsig, ysig, K=2)
+#     lm.run_mcmc(silent=True)
+
+#     return lm.chain
+
+# def fit_O32_versus_Ha_linmix():
+#     x = pd.concat([np.log10(O32Hadf_prism.L_Ha), np.log10(O32Hadf_g395m.L_Ha)])
+#     y = pd.concat([np.log10(O32Hadf_prism.O32), np.log10(O32Hadf_g395m.O32)])
+#     xsig = pd.concat([(sf.propagate_uncertainty_log10(O32Hadf_prism.L_Ha,O32Hadf_prism.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(O32Hadf_prism.L_Ha,O32Hadf_prism.L_Ha_ERR_84)) / 2,
+#                         (sf.propagate_uncertainty_log10(O32Hadf_g395m.L_Ha,O32Hadf_g395m.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(O32Hadf_g395m.L_Ha,O32Hadf_g395m.L_Ha_ERR_84)) / 2])
+#     ysig = pd.concat([(sf.propagate_uncertainty_log10(O32Hadf_prism.O32,O32Hadf_prism.O32_ERR_16) + sf.propagate_uncertainty_log10(O32Hadf_prism.O32,O32Hadf_prism.O32_ERR_84)) / 2,
+#                         (sf.propagate_uncertainty_log10(O32Hadf_g395m.O32,O32Hadf_g395m.O32_ERR_16) + sf.propagate_uncertainty_log10(O32Hadf_g395m.O32,O32Hadf_g395m.O32_ERR_84)) / 2])
+
+#     lm = linmix.LinMix(x, y, xsig, ysig, K=2)
+#     lm.run_mcmc(silent=True)
+
+#     return lm.chain
+
+# def fit_R23_versus_Ha_linmix():
+#     x = pd.concat([np.log10(R23Hadf_prism.L_Ha), np.log10(R23Hadf_g395m.L_Ha)])
+#     y = pd.concat([np.log10(R23Hadf_prism.R23), np.log10(R23Hadf_g395m.R23)])
+#     xsig = pd.concat([(sf.propagate_uncertainty_log10(R23Hadf_prism.L_Ha,R23Hadf_prism.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(R23Hadf_prism.L_Ha,R23Hadf_prism.L_Ha_ERR_84)) / 2,
+#                         (sf.propagate_uncertainty_log10(R23Hadf_g395m.L_Ha,R23Hadf_g395m.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(R23Hadf_g395m.L_Ha,R23Hadf_g395m.L_Ha_ERR_84)) / 2])
+#     ysig = pd.concat([(sf.propagate_uncertainty_log10(R23Hadf_prism.R23,R23Hadf_prism.R23_ERR_16) + sf.propagate_uncertainty_log10(R23Hadf_prism.R23,R23Hadf_prism.R23_ERR_84)) / 2,
+#                         (sf.propagate_uncertainty_log10(R23Hadf_g395m.R23,R23Hadf_g395m.R23_ERR_16) + sf.propagate_uncertainty_log10(R23Hadf_g395m.R23,R23Hadf_g395m.R23_ERR_84)) / 2])
+
+#     lm = linmix.LinMix(x, y, xsig, ysig, K=2)
+#     lm.run_mcmc(silent=True)
+
+#     return lm.chain
+
 def plot_OIIIHb_versus_Ha(ax):
+    chain = linmix_fits.fit_OIIIHb_versus_Ha_linmix()
+    for i in range(0, len(chain), 25):
+        xs = np.arange(39,45)
+        ys = chain[i]['alpha'] + xs * chain[i]['beta']
+        ax.plot(xs, ys, color='r', alpha=0.02)
+
     ax.scatter(np.log10(sphinxdf["H__1_6562.80A_int"]), sphinxdf.log_OIII_Hb, marker='h', c='k', alpha=0.1, label='SPHINX')
     ax.errorbar(x=np.log10(O3HbHadf_prism.L_Ha), y=np.log10(O3HbHadf_prism.OIII_Hb), 
             xerr=[sf.propagate_uncertainty_log10(O3HbHadf_prism.L_Ha,O3HbHadf_prism.L_Ha_ERR_16), sf.propagate_uncertainty_log10(O3HbHadf_prism.L_Ha,O3HbHadf_prism.L_Ha_ERR_84)],
@@ -51,6 +110,12 @@ def plot_OIIIHb_versus_Ha(ax):
     ax.axis([39, 44, -0.6, 1.3])
 
 def plot_NeIIIOII_versus_Ha(ax):
+    chain = linmix_fits.fit_NeIIIOII_versus_Ha_linmix()
+    for i in range(0, len(chain), 25):
+        xs = np.arange(39,45)
+        ys = chain[i]['alpha'] + xs * chain[i]['beta']
+        ax.plot(xs, ys, color='r', alpha=0.02)
+
     ax.scatter(np.log10(sphinxdf["H__1_6562.80A_int"]), sphinxdf.log_NeIII_OII, marker='h', c='k', alpha=0.1, label='SPHINX')
     ax.errorbar(x=np.log10(Ne3O2Hadf_prism.L_Ha), y=np.log10(Ne3O2Hadf_prism.NeIII_OII), 
                 xerr=[sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.L_Ha,Ne3O2Hadf_prism.L_Ha_ERR_16), sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.L_Ha,Ne3O2Hadf_prism.L_Ha_ERR_84)],
@@ -68,6 +133,12 @@ def plot_NeIIIOII_versus_Ha(ax):
     ax.axis([39, 44, -1, 1.5])
 
 def plot_O32_versus_Ha(ax):
+    chain = linmix_fits.fit_O32_versus_Ha_linmix()
+    for i in range(0, len(chain), 25):
+        xs = np.arange(39,45)
+        ys = chain[i]['alpha'] + xs * chain[i]['beta']
+        ax.plot(xs, ys, color='r', alpha=0.02)
+
     ax.scatter(np.log10(sphinxdf["H__1_6562.80A_int"]), sphinxdf.log_O32, marker='h', c='k', alpha=0.1, label='SPHINX')
     ax.errorbar(x=np.log10(O32Hadf_prism.L_Ha), y=np.log10(O32Hadf_prism.O32), 
             xerr=[sf.propagate_uncertainty_log10(O32Hadf_prism.L_Ha,O32Hadf_prism.L_Ha_ERR_16), sf.propagate_uncertainty_log10(O32Hadf_prism.L_Ha,O32Hadf_prism.L_Ha_ERR_84)],
@@ -85,6 +156,12 @@ def plot_O32_versus_Ha(ax):
     ax.axis([39, 44, -1.2, 2])
 
 def plot_R23_versus_Ha(ax):
+    chain = linmix_fits.fit_R23_versus_Ha_linmix()
+    for i in range(0, len(chain), 25):
+        xs = np.arange(39,45)
+        ys = chain[i]['alpha'] + xs * chain[i]['beta']
+        ax.plot(xs, ys, color='r', alpha=0.02)
+
     ax.scatter(np.log10(sphinxdf["H__1_6562.80A_int"]), sphinxdf.log_R23, marker='h', c='k', alpha=0.1, label='SPHINX')
     ax.errorbar(x=np.log10(R23Hadf_prism.L_Ha), y=np.log10(R23Hadf_prism.R23), 
             xerr=[sf.propagate_uncertainty_log10(R23Hadf_prism.L_Ha,R23Hadf_prism.L_Ha_ERR_16), sf.propagate_uncertainty_log10(R23Hadf_prism.L_Ha,R23Hadf_prism.L_Ha_ERR_84)],
@@ -110,7 +187,7 @@ def generate_legend_elements_ratios_versus_Ha():
                     ] 
     return legend_elements
 
-def make_ratios_versus_ha_plot():
+def make_ratios_versus_Ha_plot():
     fig = plt.figure(figsize=(20,20))
     gs = GridSpec(nrows=2, ncols=2)
     gs.update(wspace=0.3, hspace=0.3)
@@ -133,4 +210,4 @@ def make_ratios_versus_ha_plot():
     plt.savefig(globals.FIGURES.joinpath('ratios_ha.pdf'))
 
 if __name__ == "__main__":
-   make_ratios_versus_ha_plot()
+   make_ratios_versus_Ha_plot()

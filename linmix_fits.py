@@ -45,24 +45,6 @@ Ne3O32df_prism = data_management.signal_to_noise_Ne3O32_prism(line_fluxes_prism,
 Ne3O32df_g395m = data_management.signal_to_noise_Ne3O32_g395m(line_fluxes_g395m, globals.LINE_SIGNAL_TO_NOISE)
 Ne3O32df_both = pd.merge(Ne3O32df_prism, Ne3O32df_g395m, on='id', how='inner')
 
-Hadf_prism = line_fluxes_prism[data_management.signal_to_noise_Ha_prism(line_fluxes_prism, globals.LINE_SIGNAL_TO_NOISE)]
-Hadf_g395m = line_fluxes_g395m[data_management.signal_to_noise_Ha_g395m(line_fluxes_g395m, globals.LINE_SIGNAL_TO_NOISE)]
-Hadf_both = pd.merge(Hadf_prism, Hadf_g395m, on='id', how='inner')
-
-Hbdf_prism = line_fluxes_prism[data_management.signal_to_noise_Hb_prism(line_fluxes_prism, globals.LINE_SIGNAL_TO_NOISE)]
-Hbdf_g395m = line_fluxes_g395m[data_management.signal_to_noise_Hb_g395m(line_fluxes_g395m, globals.LINE_SIGNAL_TO_NOISE)]
-Hbdf_both = pd.merge(Hbdf_prism, Hbdf_g395m, on='id', how='inner')
-
-
-O3df_prism = line_fluxes_prism[data_management.signal_to_noise_5007_prism(line_fluxes_prism, globals.LINE_SIGNAL_TO_NOISE)]
-O3df_g395m = line_fluxes_g395m[data_management.signal_to_noise_5007_g395m(line_fluxes_g395m, globals.LINE_SIGNAL_TO_NOISE)]
-O3df_both = pd.merge(O3df_prism, O3df_g395m, on='id', how='inner')
-
-sphinxdf = data_management.make_sphinx_df(globals.SPHINX_DATA)
-sphinx_binned = data_management.make_sphinx_binned_df(sphinxdf)
-
-
-
 def fit_OIIIHb_versus_redshift_linmix():
     x = pd.concat([O3Hbdf_prism.z_prism, O3Hbdf_g395m.z_g395m])
     y = pd.concat([np.log10(O3Hbdf_prism.OIII_Hb), np.log10(O3Hbdf_g395m.OIII_Hb)])
@@ -192,3 +174,15 @@ def fit_R23_versus_Ha_linmix():
     lm.run_mcmc(silent=True)
 
     return lm.chain
+
+def linmix_slope_and_intercept(chain):
+    b = np.median(chain['alpha'])
+    b_std = np.std(chain['alpha'])
+
+    m = np.median(chain['beta'])
+    m_std = np.std(chain['beta'])
+
+    return f'y = {m} +/- {m_std}x + {b} +/- {b_std}'
+
+if __name__ == "__main__":
+   pass
