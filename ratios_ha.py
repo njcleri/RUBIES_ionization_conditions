@@ -33,66 +33,16 @@ Ne3O2Hadf_both = pd.merge(Ne3O2Hadf_prism, Ne3O2Hadf_g395m, on='id', how='inner'
 sphinxdf = data_management.make_sphinx_df(globals.SPHINX_DATA)
 sphinx_binned = data_management.make_sphinx_binned_df(sphinxdf)
 
-# def fit_OIIIHb_versus_Ha_linmix():
-#     x = pd.concat([np.log10(O3HbHadf_prism.L_Ha), np.log10(O3HbHadf_g395m.L_Ha)])
-#     y = pd.concat([np.log10(O3HbHadf_prism.OIII_Hb), np.log10(O3HbHadf_g395m.OIII_Hb)])
-#     xsig = pd.concat([(sf.propagate_uncertainty_log10(O3HbHadf_prism.L_Ha,O3HbHadf_prism.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(O3HbHadf_prism.L_Ha,O3HbHadf_prism.L_Ha_ERR_84)) / 2,
-#                         (sf.propagate_uncertainty_log10(O3HbHadf_g395m.L_Ha,O3HbHadf_g395m.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(O3HbHadf_g395m.L_Ha,O3HbHadf_g395m.L_Ha_ERR_84)) / 2])
-#     ysig = pd.concat([(sf.propagate_uncertainty_log10(O3HbHadf_prism.OIII_Hb,O3HbHadf_prism.OIII_Hb_ERR_16) + sf.propagate_uncertainty_log10(O3HbHadf_prism.OIII_Hb,O3HbHadf_prism.OIII_Hb_ERR_84)) / 2,
-#                         (sf.propagate_uncertainty_log10(O3HbHadf_g395m.OIII_Hb,O3HbHadf_g395m.OIII_Hb_ERR_16) + sf.propagate_uncertainty_log10(O3HbHadf_g395m.OIII_Hb,O3HbHadf_g395m.OIII_Hb_ERR_84)) / 2])
-
-#     lm = linmix.LinMix(x, y, xsig, ysig, K=2)
-#     lm.run_mcmc(silent=True)
-
-#     return lm.chain
-
-# def fit_NeIIIOII_versus_Ha_linmix():
-#     x = pd.concat([np.log10(Ne3O2Hadf_prism.L_Ha), np.log10(Ne3O2Hadf_g395m.L_Ha)])
-#     y = pd.concat([np.log10(Ne3O2Hadf_prism.NeIII_OII), np.log10(Ne3O2Hadf_g395m.NeIII_OII)])
-#     xsig = pd.concat([(sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.L_Ha,Ne3O2Hadf_prism.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.L_Ha,Ne3O2Hadf_prism.L_Ha_ERR_84)) / 2,
-#                         (sf.propagate_uncertainty_log10(Ne3O2Hadf_g395m.L_Ha,Ne3O2Hadf_g395m.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(Ne3O2Hadf_g395m.L_Ha,Ne3O2Hadf_g395m.L_Ha_ERR_84)) / 2])
-#     ysig = pd.concat([(sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.NeIII_OII,Ne3O2Hadf_prism.NeIII_OII_ERR_16) + sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.NeIII_OII,Ne3O2Hadf_prism.NeIII_OII_ERR_84)) / 2,
-#                         (sf.propagate_uncertainty_log10(Ne3O2Hadf_g395m.NeIII_OII,Ne3O2Hadf_g395m.NeIII_OII_ERR_16) + sf.propagate_uncertainty_log10(Ne3O2Hadf_g395m.NeIII_OII,Ne3O2Hadf_g395m.NeIII_OII_ERR_84)) / 2])
-
-#     lm = linmix.LinMix(x, y, xsig, ysig, K=2)
-#     lm.run_mcmc(silent=True)
-
-#     return lm.chain
-
-# def fit_O32_versus_Ha_linmix():
-#     x = pd.concat([np.log10(O32Hadf_prism.L_Ha), np.log10(O32Hadf_g395m.L_Ha)])
-#     y = pd.concat([np.log10(O32Hadf_prism.O32), np.log10(O32Hadf_g395m.O32)])
-#     xsig = pd.concat([(sf.propagate_uncertainty_log10(O32Hadf_prism.L_Ha,O32Hadf_prism.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(O32Hadf_prism.L_Ha,O32Hadf_prism.L_Ha_ERR_84)) / 2,
-#                         (sf.propagate_uncertainty_log10(O32Hadf_g395m.L_Ha,O32Hadf_g395m.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(O32Hadf_g395m.L_Ha,O32Hadf_g395m.L_Ha_ERR_84)) / 2])
-#     ysig = pd.concat([(sf.propagate_uncertainty_log10(O32Hadf_prism.O32,O32Hadf_prism.O32_ERR_16) + sf.propagate_uncertainty_log10(O32Hadf_prism.O32,O32Hadf_prism.O32_ERR_84)) / 2,
-#                         (sf.propagate_uncertainty_log10(O32Hadf_g395m.O32,O32Hadf_g395m.O32_ERR_16) + sf.propagate_uncertainty_log10(O32Hadf_g395m.O32,O32Hadf_g395m.O32_ERR_84)) / 2])
-
-#     lm = linmix.LinMix(x, y, xsig, ysig, K=2)
-#     lm.run_mcmc(silent=True)
-
-#     return lm.chain
-
-# def fit_R23_versus_Ha_linmix():
-#     x = pd.concat([np.log10(R23Hadf_prism.L_Ha), np.log10(R23Hadf_g395m.L_Ha)])
-#     y = pd.concat([np.log10(R23Hadf_prism.R23), np.log10(R23Hadf_g395m.R23)])
-#     xsig = pd.concat([(sf.propagate_uncertainty_log10(R23Hadf_prism.L_Ha,R23Hadf_prism.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(R23Hadf_prism.L_Ha,R23Hadf_prism.L_Ha_ERR_84)) / 2,
-#                         (sf.propagate_uncertainty_log10(R23Hadf_g395m.L_Ha,R23Hadf_g395m.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(R23Hadf_g395m.L_Ha,R23Hadf_g395m.L_Ha_ERR_84)) / 2])
-#     ysig = pd.concat([(sf.propagate_uncertainty_log10(R23Hadf_prism.R23,R23Hadf_prism.R23_ERR_16) + sf.propagate_uncertainty_log10(R23Hadf_prism.R23,R23Hadf_prism.R23_ERR_84)) / 2,
-#                         (sf.propagate_uncertainty_log10(R23Hadf_g395m.R23,R23Hadf_g395m.R23_ERR_16) + sf.propagate_uncertainty_log10(R23Hadf_g395m.R23,R23Hadf_g395m.R23_ERR_84)) / 2])
-
-#     lm = linmix.LinMix(x, y, xsig, ysig, K=2)
-#     lm.run_mcmc(silent=True)
-
-#     return lm.chain
-
 def plot_OIIIHb_versus_Ha(ax):
     chain = linmix_fits.fit_OIIIHb_versus_Ha_linmix()
-    for i in range(0, len(chain), 25):
-        xs = np.arange(39,45)
-        ys = chain[i]['alpha'] + xs * chain[i]['beta']
-        ax.plot(xs, ys, color='r', alpha=0.02)
-
-    ax.scatter(np.log10(sphinxdf["H__1_6562.80A_int"]), sphinxdf.log_OIII_Hb, marker='h', c='k', alpha=0.1, label='SPHINX')
+    linmix_fits.plot_linmix(ax, chain, 39, 44)
+    ax.errorbar(x=sphinx_binned.log_LHa_sphinx, y=sphinx_binned.log_OIII_Hb_sphinx, 
+                xerr=[sphinx_binned.log_LHa_sphinx_16, sphinx_binned.log_LHa_sphinx_84], 
+                yerr=[sphinx_binned.log_OIII_Hb_sphinx_16, sphinx_binned.log_OIII_Hb_sphinx_84], 
+                ls='None', c='k', zorder=-9, label='SPHINX')
+    ax.scatter(x=sphinx_binned.log_LHa_sphinx, y=sphinx_binned.log_OIII_Hb_sphinx, 
+                s=180, marker='X', ec='k', c=sphinx_binned.redshift, cmap='Reds', vmin=0, vmax=10, zorder=-9, label='SPHINX')
+    # ax.scatter(np.log10(sphinxdf["H__1_6562.80A_int"]), sphinxdf.log_OIII_Hb, marker='h', c='k', alpha=0.1, label='SPHINX')
     ax.errorbar(x=np.log10(O3HbHadf_prism.L_Ha), y=np.log10(O3HbHadf_prism.OIII_Hb), 
             xerr=[sf.propagate_uncertainty_log10(O3HbHadf_prism.L_Ha,O3HbHadf_prism.L_Ha_ERR_16), sf.propagate_uncertainty_log10(O3HbHadf_prism.L_Ha,O3HbHadf_prism.L_Ha_ERR_84)],
             yerr=[sf.propagate_uncertainty_log10(O3HbHadf_prism.OIII_Hb,O3HbHadf_prism.OIII_Hb_ERR_16), sf.propagate_uncertainty_log10(O3HbHadf_prism.OIII_Hb,O3HbHadf_prism.OIII_Hb_ERR_84)],
@@ -111,12 +61,14 @@ def plot_OIIIHb_versus_Ha(ax):
 
 def plot_NeIIIOII_versus_Ha(ax):
     chain = linmix_fits.fit_NeIIIOII_versus_Ha_linmix()
-    for i in range(0, len(chain), 25):
-        xs = np.arange(39,45)
-        ys = chain[i]['alpha'] + xs * chain[i]['beta']
-        ax.plot(xs, ys, color='r', alpha=0.02)
-
-    ax.scatter(np.log10(sphinxdf["H__1_6562.80A_int"]), sphinxdf.log_NeIII_OII, marker='h', c='k', alpha=0.1, label='SPHINX')
+    linmix_fits.plot_linmix(ax, chain, 39, 44)
+    ax.errorbar(x=sphinx_binned.log_LHa_sphinx, y=sphinx_binned.log_NeIII_OII_sphinx, 
+                xerr=[sphinx_binned.log_LHa_sphinx_16, sphinx_binned.log_LHa_sphinx_84], 
+                yerr=[sphinx_binned.log_NeIII_OII_sphinx_16, sphinx_binned.log_NeIII_OII_sphinx_84], 
+                ls='None', c='k', zorder=-9, label='SPHINX')
+    ax.scatter(x=sphinx_binned.log_LHa_sphinx, y=sphinx_binned.log_NeIII_OII_sphinx, 
+                s=180, marker='X', ec='k', c=sphinx_binned.redshift, cmap='Reds', vmin=0, vmax=10, zorder=-9, label='SPHINX')
+    # ax.scatter(np.log10(sphinxdf["H__1_6562.80A_int"]), sphinxdf.log_NeIII_OII, marker='h', c='k', alpha=0.1, label='SPHINX')
     ax.errorbar(x=np.log10(Ne3O2Hadf_prism.L_Ha), y=np.log10(Ne3O2Hadf_prism.NeIII_OII), 
                 xerr=[sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.L_Ha,Ne3O2Hadf_prism.L_Ha_ERR_16), sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.L_Ha,Ne3O2Hadf_prism.L_Ha_ERR_84)],
                 yerr=[sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.NeIII_OII,Ne3O2Hadf_prism.NeIII_OII_ERR_16), sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.NeIII_OII,Ne3O2Hadf_prism.NeIII_OII_ERR_84)],
@@ -134,12 +86,14 @@ def plot_NeIIIOII_versus_Ha(ax):
 
 def plot_O32_versus_Ha(ax):
     chain = linmix_fits.fit_O32_versus_Ha_linmix()
-    for i in range(0, len(chain), 25):
-        xs = np.arange(39,45)
-        ys = chain[i]['alpha'] + xs * chain[i]['beta']
-        ax.plot(xs, ys, color='r', alpha=0.02)
-
-    ax.scatter(np.log10(sphinxdf["H__1_6562.80A_int"]), sphinxdf.log_O32, marker='h', c='k', alpha=0.1, label='SPHINX')
+    linmix_fits.plot_linmix(ax, chain, 39, 44)
+    ax.errorbar(x=sphinx_binned.log_LHa_sphinx, y=sphinx_binned.log_O32_sphinx, 
+                xerr=[sphinx_binned.log_LHa_sphinx_16, sphinx_binned.log_LHa_sphinx_84], 
+                yerr=[sphinx_binned.log_O32_sphinx_16, sphinx_binned.log_O32_sphinx_84], 
+                ls='None', c='k', zorder=-9, label='SPHINX')
+    ax.scatter(x=sphinx_binned.log_LHa_sphinx, y=sphinx_binned.log_O32_sphinx, 
+                s=180, marker='X', ec='k', c=sphinx_binned.redshift, cmap='Reds', vmin=0, vmax=10, zorder=-9, label='SPHINX')
+    # ax.scatter(np.log10(sphinxdf["H__1_6562.80A_int"]), sphinxdf.log_O32, marker='h', c='k', alpha=0.1, label='SPHINX')
     ax.errorbar(x=np.log10(O32Hadf_prism.L_Ha), y=np.log10(O32Hadf_prism.O32), 
             xerr=[sf.propagate_uncertainty_log10(O32Hadf_prism.L_Ha,O32Hadf_prism.L_Ha_ERR_16), sf.propagate_uncertainty_log10(O32Hadf_prism.L_Ha,O32Hadf_prism.L_Ha_ERR_84)],
             yerr=[sf.propagate_uncertainty_log10(O32Hadf_prism.O32,O32Hadf_prism.O32_ERR_16), sf.propagate_uncertainty_log10(O32Hadf_prism.O32,O32Hadf_prism.O32_ERR_84)],
@@ -157,12 +111,15 @@ def plot_O32_versus_Ha(ax):
 
 def plot_R23_versus_Ha(ax):
     chain = linmix_fits.fit_R23_versus_Ha_linmix()
-    for i in range(0, len(chain), 25):
-        xs = np.arange(39,45)
-        ys = chain[i]['alpha'] + xs * chain[i]['beta']
-        ax.plot(xs, ys, color='r', alpha=0.02)
-
-    ax.scatter(np.log10(sphinxdf["H__1_6562.80A_int"]), sphinxdf.log_R23, marker='h', c='k', alpha=0.1, label='SPHINX')
+    linmix_fits.plot_linmix(ax, chain, 39, 44)
+    ax.errorbar(x=sphinx_binned.log_LHa_sphinx, y=sphinx_binned.log_R23_sphinx, 
+                xerr=[sphinx_binned.log_LHa_sphinx_16, sphinx_binned.log_LHa_sphinx_84], 
+                yerr=[sphinx_binned.log_R23_sphinx_16, sphinx_binned.log_R23_sphinx_84], 
+                ls='None', c='k', zorder=-9, label='SPHINX')
+    ax.scatter(x=sphinx_binned.log_LHa_sphinx, y=sphinx_binned.log_R23_sphinx, 
+                s=180, marker='X', ec='k', c=sphinx_binned.redshift, cmap='Reds', vmin=0, vmax=10, zorder=-9, label='SPHINX')
+    
+    # ax.scatter(np.log10(sphinxdf["H__1_6562.80A_int"]), sphinxdf.log_R23, marker='h', c='k', alpha=0.1, label='SPHINX')
     ax.errorbar(x=np.log10(R23Hadf_prism.L_Ha), y=np.log10(R23Hadf_prism.R23), 
             xerr=[sf.propagate_uncertainty_log10(R23Hadf_prism.L_Ha,R23Hadf_prism.L_Ha_ERR_16), sf.propagate_uncertainty_log10(R23Hadf_prism.L_Ha,R23Hadf_prism.L_Ha_ERR_84)],
             yerr=[sf.propagate_uncertainty_log10(R23Hadf_prism.R23,R23Hadf_prism.R23_ERR_16), sf.propagate_uncertainty_log10(R23Hadf_prism.R23,R23Hadf_prism.R23_ERR_84)],
@@ -183,7 +140,7 @@ def generate_legend_elements_ratios_versus_Ha():
                 #    Line2D([1], [1], color='k', alpha=0.3, label='Backhaus+2024', markeredgecolor='black'),
                    Line2D([0], [0], marker='o', color='none', label='PRISM', markerfacecolor=globals.PRISM_COLOR, markeredgecolor='black', markersize=np.sqrt(100)),
                    Line2D([0], [0], marker='s', color='none', label='G395M', markerfacecolor=globals.G395M_COLOR, markeredgecolor='black', markersize=np.sqrt(100)),
-                   Line2D([0], [0], marker='h', color='none', label='SPHINX', markerfacecolor='k', alpha=0.3, markeredgecolor='black', markersize=np.sqrt(100)),
+                   Line2D([0], [0], marker='X', color='none', label='SPHINX', markerfacecolor='red', markeredgecolor='black', markersize=np.sqrt(100)),
                     ] 
     return legend_elements
 

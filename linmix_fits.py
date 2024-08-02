@@ -175,6 +175,39 @@ def fit_R23_versus_Ha_linmix():
 
     return lm.chain
 
+def fit_R23_versus_O32_linmix():
+    x = pd.concat([np.log10(R23df_prism.O32), np.log10(R23df_g395m.O32)])
+    y = pd.concat([np.log10(R23df_prism.R23), np.log10(R23df_g395m.R23)])
+    xsig = pd.concat([(sf.propagate_uncertainty_log10(R23df_prism.O32,R23df_prism.O32_ERR_16) + sf.propagate_uncertainty_log10(R23df_prism.O32,R23df_prism.O32_ERR_84)) / 2,
+                        (sf.propagate_uncertainty_log10(R23df_g395m.O32,R23df_g395m.O32_ERR_16) + sf.propagate_uncertainty_log10(R23df_g395m.O32,R23df_g395m.O32_ERR_84)) / 2])
+    ysig = pd.concat([(sf.propagate_uncertainty_log10(R23df_prism.R23,R23df_prism.R23_ERR_16) + sf.propagate_uncertainty_log10(R23df_prism.R23,R23df_prism.R23_ERR_84)) / 2,
+                        (sf.propagate_uncertainty_log10(R23df_g395m.R23,R23df_g395m.R23_ERR_16) + sf.propagate_uncertainty_log10(R23df_g395m.R23,R23df_g395m.R23_ERR_84)) / 2])
+
+    lm = linmix.LinMix(x, y, xsig, ysig, K=2)
+    lm.run_mcmc(silent=True)
+
+    return lm.chain
+
+def fit_NeIIIOII_versus_O32_linmix():
+    x = pd.concat([np.log10(Ne3O32df_prism.O32), np.log10(Ne3O32df_g395m.O32)])
+    y = pd.concat([np.log10(Ne3O32df_prism.NeIII_OII), np.log10(Ne3O32df_g395m.NeIII_OII)])
+    xsig = pd.concat([(sf.propagate_uncertainty_log10(Ne3O32df_prism.O32,Ne3O32df_prism.O32_ERR_16) + sf.propagate_uncertainty_log10(Ne3O32df_prism.O32,Ne3O32df_prism.O32_ERR_84)) / 2,
+                        (sf.propagate_uncertainty_log10(Ne3O32df_g395m.O32,Ne3O32df_g395m.O32_ERR_16) + sf.propagate_uncertainty_log10(Ne3O32df_g395m.O32,Ne3O32df_g395m.O32_ERR_84)) / 2])
+    ysig = pd.concat([(sf.propagate_uncertainty_log10(Ne3O32df_prism.NeIII_OII,Ne3O32df_prism.NeIII_OII_ERR_16) + sf.propagate_uncertainty_log10(Ne3O32df_prism.NeIII_OII,Ne3O32df_prism.NeIII_OII_ERR_84)) / 2,
+                        (sf.propagate_uncertainty_log10(Ne3O32df_g395m.NeIII_OII,Ne3O32df_g395m.NeIII_OII_ERR_16) + sf.propagate_uncertainty_log10(Ne3O32df_g395m.NeIII_OII,Ne3O32df_g395m.NeIII_OII_ERR_84)) / 2])
+
+    lm = linmix.LinMix(x, y, xsig, ysig, K=2)
+    lm.run_mcmc(silent=True)
+
+    return lm.chain
+
+def plot_linmix(ax, chain, xmin, xmax):
+    xs = np.linspace(xmin, xmax, 100)
+    for i in range(0, len(chain), 25):
+        ys = chain[i]['alpha'] + xs * chain[i]['beta']
+        ax.plot(xs, ys, color='k', alpha=0.01, zorder=-10)
+    ax.plot(xs, np.median(chain['alpha']) + xs * np.median(chain['beta']), color='k', alpha=1, zorder=-9)
+
 def linmix_slope_and_intercept(chain):
     b = np.median(chain['alpha'])
     b_std = np.std(chain['alpha'])

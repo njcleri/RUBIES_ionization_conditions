@@ -8,6 +8,7 @@ from matplotlib.lines import Line2D
 from nikkos_tools import stat_functions as sf
 import data_management
 import globals
+import linmix_fits
 
 line_fluxes = pd.read_csv(globals.RUBIES_DATA.joinpath('line_flux_df.csv'), index_col=0)
 line_fluxes_prism = data_management.make_df_prism(line_fluxes)
@@ -26,7 +27,15 @@ sphinxdf = data_management.make_sphinx_df(globals.SPHINX_DATA)
 sphinx_binned = data_management.make_sphinx_binned_df(sphinxdf)
 
 def plot_R23_versus_O32(ax):
-    ax.scatter(sphinxdf.log_O32, sphinxdf.log_R23, marker='h', c='k', alpha=0.1, label='SPHINX')
+    chain = linmix_fits.fit_R23_versus_O32_linmix()
+    linmix_fits.plot_linmix(ax, chain, -1, 2)
+    # ax.scatter(sphinxdf.log_O32, sphinxdf.log_R23, marker='h', c='k', alpha=0.1, label='SPHINX')
+    ax.errorbar(x=sphinx_binned.log_O32_sphinx, y=sphinx_binned.log_R23_sphinx, 
+                xerr=[sphinx_binned.log_O32_sphinx_16, sphinx_binned.log_O32_sphinx_84], 
+                yerr=[sphinx_binned.log_R23_sphinx_16, sphinx_binned.log_R23_sphinx_84], 
+                ls='None', c='k', zorder=-9, label='SPHINX')
+    ax.scatter(x=sphinx_binned.log_O32_sphinx, y=sphinx_binned.log_R23_sphinx, 
+                s=180, marker='X', ec='k', c=sphinx_binned.redshift, cmap='Reds', vmin=0, vmax=10, zorder=-9, label='SPHINX')
     ax.errorbar(x=np.log10(R23df_prism.O32), y=np.log10(R23df_prism.R23), 
                 xerr=[sf.propagate_uncertainty_log10(R23df_prism.O32,R23df_prism.O32_ERR_16), sf.propagate_uncertainty_log10(R23df_prism.O32,R23df_prism.O32_ERR_84)], 
                 yerr=[sf.propagate_uncertainty_log10(R23df_prism.R23,R23df_prism.R23_ERR_16), sf.propagate_uncertainty_log10(R23df_prism.R23,R23df_prism.R23_ERR_84)], 
@@ -45,7 +54,15 @@ def plot_R23_versus_O32(ax):
     ax.axis([-1, 2, 0, 1.5])
 
 def plot_NeIIIOII_versus_O32(ax):
-    ax.scatter(sphinxdf.log_O32, sphinxdf.log_NeIII_OII, marker='h', c='k', alpha=0.1, label='SPHINX')
+    chain = linmix_fits.fit_NeIIIOII_versus_O32_linmix()
+    linmix_fits.plot_linmix(ax, chain, -1, 2)
+    # ax.scatter(sphinxdf.log_O32, sphinxdf.log_NeIII_OII, marker='h', c='k', alpha=0.1, label='SPHINX')
+    ax.errorbar(x=sphinx_binned.log_O32_sphinx, y=sphinx_binned.log_NeIII_OII_sphinx, 
+                xerr=[sphinx_binned.log_O32_sphinx_16, sphinx_binned.log_O32_sphinx_84], 
+                yerr=[sphinx_binned.log_NeIII_OII_sphinx_16, sphinx_binned.log_NeIII_OII_sphinx_84], 
+                ls='None', c='k', zorder=-9, label='SPHINX')
+    ax.scatter(x=sphinx_binned.log_O32_sphinx, y=sphinx_binned.log_NeIII_OII_sphinx, 
+                s=180, marker='X', ec='k', c=sphinx_binned.redshift, cmap='Reds', vmin=0, vmax=10, zorder=-9, label='SPHINX')
     ax.errorbar(x=np.log10(Ne3O32df_prism.O32), y=np.log10(Ne3O32df_prism.NeIII_OII), 
                 xerr=[sf.propagate_uncertainty_log10(Ne3O32df_prism.O32,Ne3O32df_prism.O32_ERR_16), sf.propagate_uncertainty_log10(Ne3O32df_prism.O32,Ne3O32df_prism.O32_ERR_84)], 
                 yerr=[sf.propagate_uncertainty_log10(Ne3O32df_prism.NeIII_OII,Ne3O32df_prism.NeIII_OII_ERR_16), sf.propagate_uncertainty_log10(Ne3O32df_prism.NeIII_OII,Ne3O32df_prism.NeIII_OII_ERR_84)], 
@@ -67,7 +84,7 @@ def generate_legend_elements_ratios_versus_O32():
     legend_elements = [
                    Line2D([0], [0], marker='o', color='none', label='PRISM', markerfacecolor='red', markeredgecolor='black', markersize=np.sqrt(100)),
                    Line2D([0], [0], marker='s', color='none', label='G395M', markerfacecolor='red', markeredgecolor='black', markersize=np.sqrt(100)),
-                   Line2D([0], [0], marker='h', color='none', label='SPHINX', markerfacecolor='k', alpha=0.3, markeredgecolor='black', markersize=np.sqrt(100)),
+                   Line2D([0], [0], marker='X', color='none', label='SPHINX', markerfacecolor='red', markeredgecolor='black', markersize=np.sqrt(100)),
                     ] 
     return legend_elements
 

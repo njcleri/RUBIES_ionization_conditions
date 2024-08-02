@@ -10,7 +10,7 @@ def r23_uncertainty(oiii_5007, oiii_5007_ERR, oiii_4959, oiii_4959_ERR, oii, oii
     return sf.propagate_uncertainty_division(numerator, numerator_ERR, Hb, Hb_err)
 
 def make_df_prism(df):
-    new_df = (df.loc[:, df.columns.str.contains('prism')|(df.columns == 'id')]
+    new_df = (df.loc[:, df.columns.str.contains('prism')|(df.columns == 'id')|(df.columns == 'ra')|(df.columns == 'dec')]
                      .assign(
                             OIII_Hb = lambda x: x.Oiii_5007_prism/x.Hb_prism,
                             O32 = lambda x: x.Oiii_5007_prism/x.Oii_3727_prism,
@@ -51,7 +51,7 @@ def make_df_prism(df):
     return new_df
 
 def make_df_g395m(df):
-    new_df = (df.loc[:, df.columns.str.contains('g395m')|(df.columns == 'id')]
+    new_df = (df.loc[:, df.columns.str.contains('g395m')|(df.columns == 'id')|(df.columns == 'ra')|(df.columns == 'dec')]
                      .assign(
                             OIII_Hb = lambda x: x.Oiii_5007_g395m/x.Hb_g395m,
                             O32 = lambda x: x.Oiii_5007_g395m/x.Oii_3727_g395m,
@@ -325,6 +325,7 @@ def make_sphinx_df(sphinx_data_path):
                 log_O32 = lambda x: np.log10(x['O__3_5006.84A_int'] / (x["O__2_3728.81A_int"] + x["O__2_3726.03A_int"])),
                 log_R23 = lambda x: np.log10((x['O__3_5006.84A_int'] + x["O__3_4958.91A_int"] + x["O__2_3728.81A_int"] + x["O__2_3726.03A_int"]) / x["H__1_4861.32A_int"]),
                 log_NeIII_OII = lambda x: np.log10(x["Ne_3_3868.76A_int"] / (x["O__2_3728.81A_int"] + x["O__2_3726.03A_int"])),
+                log_LHa = lambda x: np.log10(x["H__1_6562.80A_int"]),
                 )
     )
     return df
@@ -334,6 +335,10 @@ def make_sphinx_binned_df(sphinxdf):
     z_sphinx = sphinxdf['redshift'].unique()
     hden_OII = np.zeros(len(z_sphinx))
     hden_CIII = np.zeros(len(z_sphinx))
+
+    log_LHa_sphinx = np.zeros(len(z_sphinx))
+    log_LHa_sphinx_16 = np.zeros(len(z_sphinx))
+    log_LHa_sphinx_84 = np.zeros(len(z_sphinx))
 
     log_O32_sphinx = np.zeros(len(z_sphinx))
     log_O32_sphinx_16 = np.zeros(len(z_sphinx))
@@ -355,6 +360,10 @@ def make_sphinx_binned_df(sphinxdf):
         hden_OII[i] = sphinxdf[sphinxdf.redshift == z]['gas_density_3727'].median()
         hden_CIII[i] = sphinxdf[sphinxdf.redshift == z]['gas_density_1908'].median()
 
+        log_LHa_sphinx[i] = sphinxdf[sphinxdf.redshift == z]['log_LHa'].median()
+        log_LHa_sphinx_16[i] = np.abs(sphinxdf[sphinxdf.redshift == z]['log_LHa'].quantile(q=0.16) - log_LHa_sphinx[i])
+        log_LHa_sphinx_84[i] = np.abs(sphinxdf[sphinxdf.redshift == z]['log_LHa'].quantile(q=0.84) - log_LHa_sphinx[i])
+
         log_O32_sphinx[i] = sphinxdf[sphinxdf.redshift == z]['log_O32'].median()
         log_O32_sphinx_16[i] = np.abs(sphinxdf[sphinxdf.redshift == z]['log_O32'].quantile(q=0.16) - log_O32_sphinx[i])
         log_O32_sphinx_84[i] = np.abs(sphinxdf[sphinxdf.redshift == z]['log_O32'].quantile(q=0.84) - log_O32_sphinx[i])
@@ -375,6 +384,9 @@ def make_sphinx_binned_df(sphinxdf):
         'redshift':z_sphinx,
         'hden_OII':hden_OII,
         'hden_CIII':hden_CIII,
+        'log_LHa_sphinx':log_LHa_sphinx,
+        'log_LHa_sphinx_16':log_LHa_sphinx_16,
+        'log_LHa_sphinx_84':log_LHa_sphinx_84,
         'log_O32_sphinx':log_O32_sphinx,
         'log_O32_sphinx_16':log_O32_sphinx_16,
         'log_O32_sphinx_84':log_O32_sphinx_84,
