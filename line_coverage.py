@@ -4,7 +4,6 @@ from matplotlib import pyplot as plt
 from matplotlib.gridspec import GridSpec
 import globals
 
-
 def get_zmin_prism(wave):
     return 6000/wave - 1
 def get_zmax_prism(wave):

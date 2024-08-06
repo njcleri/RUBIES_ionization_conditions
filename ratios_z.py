@@ -15,10 +15,6 @@ SPHINX_DATA = Path('/Users/njc5787/Research/SPHINX-20-data/data').resolve()
 RUBIES_DATA = Path('../data').resolve()
 FIGURES = Path('./figures').resolve()
 
-COLORS = ['#CC79A7', '#D55E00', '#0072B2', '#56B4E9', '#009E73', '#E69F00', '#000000', '#F0E442',]
-globals.PRISM_COLOR = COLORS[2]
-globals.G395M_COLOR = COLORS[1]
-
 line_fluxes = pd.read_csv(globals.RUBIES_DATA.joinpath('line_flux_df.csv'), index_col=0)
 line_fluxes_prism = data_management.make_df_prism(line_fluxes)
 line_fluxes_g395m = data_management.make_df_g395m(line_fluxes)

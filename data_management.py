@@ -10,12 +10,13 @@ def r23_uncertainty(oiii_5007, oiii_5007_ERR, oiii_4959, oiii_4959_ERR, oii, oii
     return sf.propagate_uncertainty_division(numerator, numerator_ERR, Hb, Hb_err)
 
 def make_df_prism(df):
-    new_df = (df.loc[:, df.columns.str.contains('prism')|(df.columns == 'id')|(df.columns == 'ra')|(df.columns == 'dec')]
+    new_df = (df.loc[:, df.columns.str.contains('prism')|(df.columns == 'id')|(df.columns == 'ra')|(df.columns == 'dec')|(df.columns.str.contains('_photcat'))]
                      .assign(
                             OIII_Hb = lambda x: x.Oiii_5007_prism/x.Hb_prism,
                             O32 = lambda x: x.Oiii_5007_prism/x.Oii_3727_prism,
                             NeIII_OII = lambda x: x.Neiii_3869_prism/x.Oii_3727_prism,
                             R23 = lambda x: (x.Oiii_5007_prism+x.Oiii_4959_prism+x.Oii_3727_prism)/x.Hb_prism,
+                            SII_SII_6717_6731 = lambda x: x.Sii_6717_prism/x.Sii_6731_prism,
                             OIII_Hb_ERR_84 = lambda x: sf.propagate_uncertainty_division(x.Oiii_5007_prism, x.Oiii_5007_prism_p84_err,
                                                   x.Hb_prism, x.Hb_prism_p84_err),
                             OIII_Hb_ERR_16 = lambda x: sf.propagate_uncertainty_division(x.Oiii_5007_prism, x.Oiii_5007_prism_p16_err,
@@ -28,6 +29,10 @@ def make_df_prism(df):
                                                   x.Oii_3727_prism, x.Oii_3727_prism_p84_err),
                             NeIII_OII_ERR_16 = lambda x: sf.propagate_uncertainty_division(x.Neiii_3869_prism, x.Neiii_3869_prism_p16_err,
                                                   x.Oii_3727_prism, x.Oii_3727_prism_p16_err), 
+                            SII_SII_6717_6731_ERR_84 = lambda x: sf.propagate_uncertainty_division(x.Sii_6717_prism, x.Sii_6717_prism_p84_err,
+                                                  x.Sii_6731_prism, x.Sii_6731_prism_p84_err),
+                            SII_SII_6717_6731_ERR_16 = lambda x: sf.propagate_uncertainty_division(x.Sii_6717_prism, x.Sii_6717_prism_p16_err,
+                                                  x.Sii_6731_prism, x.Sii_6731_prism_p16_err), 
                             R23_ERR_84 = lambda x: r23_uncertainty(x.Oiii_5007_prism, x.Oiii_5007_prism_p84_err, 
                                                                    x.Oiii_4959_prism, x.Oiii_4959_prism_p84_err, 
                                                                    x.Oii_3727_prism, x.Oii_3727_prism_p84_err,
@@ -51,12 +56,13 @@ def make_df_prism(df):
     return new_df
 
 def make_df_g395m(df):
-    new_df = (df.loc[:, df.columns.str.contains('g395m')|(df.columns == 'id')|(df.columns == 'ra')|(df.columns == 'dec')]
+    new_df = (df.loc[:, df.columns.str.contains('g395m')|(df.columns == 'id')|(df.columns == 'ra')|(df.columns == 'dec')|(df.columns.str.contains('_photcat'))]
                      .assign(
                             OIII_Hb = lambda x: x.Oiii_5007_g395m/x.Hb_g395m,
                             O32 = lambda x: x.Oiii_5007_g395m/x.Oii_3727_g395m,
                             NeIII_OII = lambda x: x.Neiii_3869_g395m/x.Oii_3727_g395m,
                             R23 = lambda x: (x.Oiii_5007_g395m+x.Oiii_4959_g395m+x.Oii_3727_g395m)/x.Hb_g395m,
+                            SII_SII_6717_6731 = lambda x: x.Sii_6717_g395m/x.Sii_6731_g395m,
                             OIII_Hb_ERR_84 = lambda x: sf.propagate_uncertainty_division(x.Oiii_5007_g395m, x.Oiii_5007_g395m_p84_err,
                                                   x.Hb_g395m, x.Hb_g395m_p84_err),
                             OIII_Hb_ERR_16 = lambda x: sf.propagate_uncertainty_division(x.Oiii_5007_g395m, x.Oiii_5007_g395m_p16_err,
@@ -69,6 +75,10 @@ def make_df_g395m(df):
                                                   x.Oii_3727_g395m, x.Oii_3727_g395m_p84_err),
                             NeIII_OII_ERR_16 = lambda x: sf.propagate_uncertainty_division(x.Neiii_3869_g395m, x.Neiii_3869_g395m_p16_err,
                                                   x.Oii_3727_g395m, x.Oii_3727_g395m_p16_err), 
+                            SII_SII_6717_6731_ERR_84 = lambda x: sf.propagate_uncertainty_division(x.Sii_6717_g395m, x.Sii_6717_g395m_p84_err,
+                                                  x.Sii_6731_g395m, x.Sii_6731_g395m_p84_err),
+                            SII_SII_6717_6731_ERR_16 = lambda x: sf.propagate_uncertainty_division(x.Sii_6717_g395m, x.Sii_6717_g395m_p16_err,
+                                                  x.Sii_6731_g395m, x.Sii_6731_g395m_p16_err), 
                             R23_ERR_84 = lambda x: r23_uncertainty(x.Oiii_5007_g395m, x.Oiii_5007_g395m_p84_err, 
                                                                    x.Oiii_4959_g395m, x.Oiii_4959_g395m_p84_err, 
                                                                    x.Oii_3727_g395m, x.Oii_3727_g395m_p84_err,
@@ -184,6 +194,38 @@ def signal_to_noise_Ha_prism(df, signal_to_noise, mcmc_runaway_threshold=10000):
                            (df.Ha_prism/df.Ha_prism_p16_err > signal_to_noise)
                            &(df.Ha_prism/df.Ha_prism_p84_err > signal_to_noise)
                            &(df.Ha_prism < mcmc_runaway_threshold)
+                           )
+    return signal_to_noise_cut
+
+def signal_to_noise_6717_g395m(df, signal_to_noise, mcmc_runaway_threshold=10000):
+    signal_to_noise_cut = (
+                           (df.Sii_6717_g395m/df.Sii_6717_g395m_p16_err > signal_to_noise)
+                           &(df.Sii_6717_g395m/df.Sii_6717_g395m_p84_err > signal_to_noise)
+                           &(df.Sii_6717_g395m < mcmc_runaway_threshold)
+                           )
+    return signal_to_noise_cut
+
+def signal_to_noise_6717_prism(df, signal_to_noise, mcmc_runaway_threshold=10000):
+    signal_to_noise_cut = (
+                           (df.Sii_6717_prism/df.Sii_6717_prism_p16_err > signal_to_noise)
+                           &(df.Sii_6717_prism/df.Sii_6717_prism_p84_err > signal_to_noise)
+                           &(df.Sii_6717_prism < mcmc_runaway_threshold)
+                           )
+    return signal_to_noise_cut
+
+def signal_to_noise_6731_g395m(df, signal_to_noise, mcmc_runaway_threshold=10000):
+    signal_to_noise_cut = (
+                           (df.Sii_6731_g395m/df.Sii_6731_g395m_p16_err > signal_to_noise)
+                           &(df.Sii_6731_g395m/df.Sii_6731_g395m_p84_err > signal_to_noise)
+                           &(df.Sii_6731_g395m < mcmc_runaway_threshold)
+                           )
+    return signal_to_noise_cut
+
+def signal_to_noise_6731_prism(df, signal_to_noise, mcmc_runaway_threshold=10000):
+    signal_to_noise_cut = (
+                           (df.Sii_6731_prism/df.Sii_6731_prism_p16_err > signal_to_noise)
+                           &(df.Sii_6731_prism/df.Sii_6731_prism_p84_err > signal_to_noise)
+                           &(df.Sii_6731_prism < mcmc_runaway_threshold)
                            )
     return signal_to_noise_cut
 
@@ -311,6 +353,35 @@ def signal_to_noise_Ne3O32_g395m(df, signal_to_noise):
               signal_to_noise_3727_g395m(df, signal_to_noise)  
               & signal_to_noise_3869_g395m(df, signal_to_noise) 
               & signal_to_noise_5007_g395m(df, signal_to_noise)
+              ]
+
+def signal_to_noise_OHNO_prism(df, signal_to_noise):
+    return df[
+              signal_to_noise_3727_prism(df, signal_to_noise)  
+              & signal_to_noise_3869_prism(df, signal_to_noise) 
+              & signal_to_noise_Hb_prism(df, signal_to_noise) 
+              & signal_to_noise_5007_prism(df, signal_to_noise)
+              ]
+
+def signal_to_noise_OHNO_g395m(df, signal_to_noise):
+    return df[
+              signal_to_noise_3727_g395m(df, signal_to_noise)  
+              & signal_to_noise_3869_g395m(df, signal_to_noise) 
+              & signal_to_noise_Hb_g395m(df, signal_to_noise) 
+              & signal_to_noise_5007_g395m(df, signal_to_noise)
+              ]
+
+
+def signal_to_noise_6717_6731_prism(df, signal_to_noise):
+    return df[
+              signal_to_noise_6717_prism(df, signal_to_noise)  
+              & signal_to_noise_6731_prism(df, signal_to_noise)
+              ]
+
+def signal_to_noise_6717_6731_g395m(df, signal_to_noise):
+    return df[
+              signal_to_noise_6717_g395m(df, signal_to_noise)  
+              & signal_to_noise_6731_g395m(df, signal_to_noise)
               ]
 
 def make_sphinx_df(sphinx_data_path):
