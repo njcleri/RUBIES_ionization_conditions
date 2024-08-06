@@ -45,6 +45,8 @@ Ne3O32df_prism = data_management.signal_to_noise_Ne3O32_prism(line_fluxes_prism,
 Ne3O32df_g395m = data_management.signal_to_noise_Ne3O32_g395m(line_fluxes_g395m, globals.LINE_SIGNAL_TO_NOISE)
 Ne3O32df_both = pd.merge(Ne3O32df_prism, Ne3O32df_g395m, on='id', how='inner')
 
+
+
 def fit_OIIIHb_versus_redshift_linmix():
     x = pd.concat([O3Hbdf_prism.z_prism, O3Hbdf_g395m.z_g395m])
     y = pd.concat([np.log10(O3Hbdf_prism.OIII_Hb), np.log10(O3Hbdf_g395m.OIII_Hb)])
@@ -200,6 +202,17 @@ def fit_NeIIIOII_versus_O32_linmix():
     lm.run_mcmc(silent=True)
 
     return lm.chain
+
+def fit_NeIIIOII_versus_mstar_linmix():
+    x = pd.concat([Ne3O2df_mstar_prism.mstar_50_photcat, Ne3O2df_mstar_g395m.mstar_50_photcat])
+    y = pd.concat([np.log10(Ne3O2df_mstar_prism.NeIII_OII), np.log10(Ne3O2df_mstar_g395m.NeIII_OII)])
+    xsig = pd.concat([(Ne3O2df_mstar_prism.mstar_16_photcat + Ne3O2df_mstar_prism.mstar_84_photcat) / 2, (Ne3O2df_mstar_g395m.mstar_16_photcat + Ne3O2df_mstar_g395m.mstar_84_photcat) / 2])
+    ysig = pd.concat([(sf.propagate_uncertainty_log10(Ne3O2df_mstar_prism.NeIII_OII,Ne3O2df_mstar_prism.NeIII_OII_ERR_16) + sf.propagate_uncertainty_log10(Ne3O2df_mstar_prism.NeIII_OII,Ne3O2df_mstar_prism.NeIII_OII_ERR_84)) / 2,
+                        (sf.propagate_uncertainty_log10(Ne3O2df_mstar_g395m.NeIII_OII,Ne3O2df_mstar_g395m.NeIII_OII_ERR_16) + sf.propagate_uncertainty_log10(Ne3O2df_mstar_g395m.NeIII_OII,Ne3O2df_mstar_g395m.NeIII_OII_ERR_84)) / 2])
+
+    lm = linmix.LinMix(x, y, xsig, ysig, K=2)
+    lm.run_mcmc(silent=True)
+
 
 def plot_linmix(ax, chain, xmin, xmax):
     xs = np.linspace(xmin, xmax, 100)
