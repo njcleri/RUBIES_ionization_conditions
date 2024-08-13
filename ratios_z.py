@@ -4,16 +4,10 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from matplotlib.gridspec import GridSpec
 from matplotlib.lines import Line2D
-from astropy.table import Table
-import linmix
 import linmix_fits
 from nikkos_tools import stat_functions as sf
 import data_management
 import globals
-
-SPHINX_DATA = Path('/Users/njc5787/Research/SPHINX-20-data/data').resolve()
-RUBIES_DATA = Path('../data').resolve()
-FIGURES = Path('./figures').resolve()
 
 line_fluxes = pd.read_csv(globals.RUBIES_DATA.joinpath('line_flux_df.csv'), index_col=0)
 line_fluxes_prism = data_management.make_df_prism(line_fluxes)

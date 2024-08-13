@@ -1,8 +1,13 @@
 from pathlib import Path
 import numpy as np
 import pandas as pd
+from astropy import table
+from astropy.table import Table
+from astropy import coordinates
+from astropy.coordinates import SkyCoord
 from nikkos_tools import stat_functions as sf
 from nikkos_tools import physics_functions as pf
+import globals
 
 def r23_uncertainty(oiii_5007, oiii_5007_ERR, oiii_4959, oiii_4959_ERR, oii, oii_ERR, Hb, Hb_err):
     numerator = oiii_5007 + oiii_4959 + oii
@@ -473,3 +478,30 @@ def make_sphinx_binned_df(sphinxdf):
     }
 
     return pd.DataFrame(data=sphinx_binned_data)
+
+def make_merged_photometry_lines_df():
+    egs_photometry = list(globals.RUBIES_DATA.glob('egs*sps*.fits'))
+    egs_photometrydf = Table.read(egs_photometry[0], format='fits')
+    uds_photometry = list(globals.RUBIES_DATA.glob('uds*sps*.fits'))
+    uds_photometrydf = Table.read(uds_photometry[0], format='fits')
+
+    photometry = table.vstack([uds_photometrydf, egs_photometrydf])
+
+    line_fluxes = Table.from_pandas(pd.read_csv(globals.RUBIES_DATA.joinpath('line_flux_df.csv'), index_col=0))
+
+    c_phot = SkyCoord(photometry['ra'], photometry['dec'], unit='deg')
+    c_line = SkyCoord(line_fluxes['ra'], line_fluxes['dec'], unit='deg')
+
+    idx, sep2d, dist3d = coordinates.match_coordinates_sky(c_phot, c_line)
+    line_fluxes = line_fluxes[idx].to_pandas()
+    line_fluxes['sep2d'] = sep2d.to_value()
+    line_fluxes['idx'] = idx
+    line_fluxes = line_fluxes[line_fluxes['sep2d'] < 0.0001]
+
+    photometrydf = photometry.to_pandas()
+    photometrydf['sep2d'] = sep2d.to_value()
+    photometrydf['idx'] = idx
+    photometrydf = photometrydf[photometrydf.sep2d < 0.0001]
+    photometrydf = photometrydf.add_suffix('_photcat')
+
+    return pd.merge(line_fluxes, photometrydf, left_on='idx', right_on='idx_photcat')
