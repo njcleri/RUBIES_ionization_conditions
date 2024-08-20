@@ -139,12 +139,15 @@ def fit_OIIIHb_versus_Ha_linmix():
     return lm.chain
 
 def fit_NeIIIOII_versus_Ha_linmix():
-    x = pd.concat([np.log10(Ne3O2Hadf_prism.L_Ha), np.log10(Ne3O2Hadf_g395m.L_Ha)])
-    y = pd.concat([np.log10(Ne3O2Hadf_prism.NeIII_OII), np.log10(Ne3O2Hadf_g395m.NeIII_OII)])
-    xsig = pd.concat([(sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.L_Ha,Ne3O2Hadf_prism.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.L_Ha,Ne3O2Hadf_prism.L_Ha_ERR_84)) / 2,
-                        (sf.propagate_uncertainty_log10(Ne3O2Hadf_g395m.L_Ha,Ne3O2Hadf_g395m.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(Ne3O2Hadf_g395m.L_Ha,Ne3O2Hadf_g395m.L_Ha_ERR_84)) / 2])
-    ysig = pd.concat([(sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.NeIII_OII,Ne3O2Hadf_prism.NeIII_OII_ERR_16) + sf.propagate_uncertainty_log10(Ne3O2Hadf_prism.NeIII_OII,Ne3O2Hadf_prism.NeIII_OII_ERR_84)) / 2,
-                        (sf.propagate_uncertainty_log10(Ne3O2Hadf_g395m.NeIII_OII,Ne3O2Hadf_g395m.NeIII_OII_ERR_16) + sf.propagate_uncertainty_log10(Ne3O2Hadf_g395m.NeIII_OII,Ne3O2Hadf_g395m.NeIII_OII_ERR_84)) / 2])
+    df_prism = Ne3O2Hadf_prism[Ne3O2Hadf_prism.z_prism > 0]
+    df_g395m = Ne3O2Hadf_g395m[Ne3O2Hadf_g395m.z_g395m > 0]
+
+    x = pd.concat([np.log10(df_prism.L_Ha), np.log10(df_g395m.L_Ha)])
+    y = pd.concat([np.log10(df_prism.NeIII_OII), np.log10(df_g395m.NeIII_OII)])
+    xsig = pd.concat([(sf.propagate_uncertainty_log10(df_prism.L_Ha,df_prism.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(df_prism.L_Ha,df_prism.L_Ha_ERR_84)) / 2,
+                        (sf.propagate_uncertainty_log10(df_g395m.L_Ha,df_g395m.L_Ha_ERR_16) + sf.propagate_uncertainty_log10(df_g395m.L_Ha,df_g395m.L_Ha_ERR_84)) / 2])
+    ysig = pd.concat([(sf.propagate_uncertainty_log10(df_prism.NeIII_OII,df_prism.NeIII_OII_ERR_16) + sf.propagate_uncertainty_log10(df_prism.NeIII_OII,df_prism.NeIII_OII_ERR_84)) / 2,
+                        (sf.propagate_uncertainty_log10(df_g395m.NeIII_OII,df_g395m.NeIII_OII_ERR_16) + sf.propagate_uncertainty_log10(df_g395m.NeIII_OII,df_g395m.NeIII_OII_ERR_84)) / 2])
 
     lm = linmix.LinMix(x, y, xsig, ysig, K=2)
     lm.run_mcmc(silent=True)
